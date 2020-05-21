@@ -1,0 +1,95 @@
+<script type="text/javascript" th:src="@{/js/jquery-3.4.1.js}" xmlns:th="http://www.w3.org/1999/xhtml"></script>
+<script type="text/javascript" th:inline="javascript" xmlns:th="http://www.w3.org/1999/xhtml">
+    /*<![CDATA[*/
+
+    /* Side Menu 설정 */
+    $(document).ready(function() {
+
+        var menu = $("#menuName").val();
+        $("#sideMenu li").removeClass("active"); // 기존 적용 class 삭제
+        $("#sideMenu li a .sr-only").remove(); // 기존 적용 span 요소 삭제
+
+        $("#sideMenu #"+menu).addClass("active"); // 클릭 한 메뉴 class 삽입
+        $("#sideMenu #"+menu+" a").find("a").append("<span class=\"sr-only\">(current)</span>"); // 클릭 한 메뉴 span 요소 삽입
+    });
+
+    function CheckConfirm(){
+        var confirmflag = confirm("정말 처리하시겠습니까?");
+        return confirmflag;
+    }
+
+    function closePopup(){
+        self.close();
+    };
+
+    /* 페이징 : 전체 적용 */
+    function pagging(page, url) {
+        document.frm.currentPageNo.value = page;
+
+        if(url == 'auctionLot'){
+            var auctionName = $('#auctionName').val();
+            var auctionId = $('#auctionId').val();
+            var auctionTitle = $('#auctionTitle').val();
+            document.frm.searchValue.value = $('#searchValue').val();
+            document.frm.action ="/"+url+"/"+auctionName+"/"+auctionId+"/"+auctionTitle;
+
+        }
+        else if(url == 'integrationAuctionLot'){
+            var auctionId = $('#auctionId').val();
+            var auctionTitle = $('#auctionTitle').val();
+            document.frm.searchValue.value = $('#searchValue').val();
+            document.frm.action ="/"+url+"/"+auctionId+"/"+auctionTitle;
+        }
+        else if(url == 'feedback'){
+            document.frm.searchKey.value = $('#searchKey').val();
+            document.frm.searchValue.value = $('#searchValue').val();
+        }
+        else {// auctionResults, integrationAuctionResults, artist, user, admin
+            document.frm.action ="/"+url;
+        }
+        document.frm.submit();
+    };
+
+    /* 검색 : 전체 적용 */
+    function search(url) {
+        var searchValue = $('#searchValue').val();
+        if(url == 'auctionLot'){
+            var auctionName = $('#auctionName').val();
+            var auctionId = $('#auctionId').val();
+            var auctionTitle = $('#auctionTitle').val();
+
+            document.frm.searchKey.value = $('#searchKey').val();
+            document.frm.searchValue.value = $('#searchValue').val();
+            document.frm.action ="/"+url+"/"+auctionName+"/"+auctionId+"/"+auctionTitle;
+            document.frm.submit();
+        }
+        else if(url == 'integrationAuctionLot'){
+            var auctionId = $('#auctionId').val();
+            var auctionTitle = $('#auctionTitle').val();
+
+            document.frm.searchKey.value = $('#searchKey').val();
+            document.frm.searchValue.value = $('#searchValue').val();
+            document.frm.action ="/"+url+"/"+auctionId+"/"+auctionTitle;
+            document.frm.submit();
+        }
+        else { // auctionResults, integrationAuctionResults, artist, user, feedback, admin
+            document.searchFrm.action ="/"+url;
+            document.searchFrm.submit();
+        }
+    };
+
+
+    /* VIEW : Auction Results && Integration Auction Results
+       FUNCTION : Auction Title 수정 시 Insert Form 전환 */
+    function auctionTitleUpdateView(index) {
+        document.getElementById("auctionTitleView"+index).style.display = "none";
+        document.getElementById("auctionTitleUpdateView"+index).style.display = "block";
+    }
+
+    /* ]]> */
+</script>
+
+
+
+
+

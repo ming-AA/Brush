@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Aimme</title>
+        <link rel="icon" href="/img/favicon-black.png" type="image/x-icon">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link href="/css/auction.css" rel="stylesheet">
+
+    </head>
+    <body onbeforeunload="closePopup()" style="padding-top: 0px">
+        <div class="col-md-10 main" style="float: left">
+            <h2 class="sub-header" style="font-family: 'EB Garamond', serif">Exchange Rate Detail</h2>
+            <!-- 리스트 시작 -->
+            <form name="exchangeRateDetailFrm">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th class="active font-helve">Year Month</th>
+                            <td id="yearMonth" name="yearMonth" th:text="${exchangeRateDetail.yearMonth}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">GBP_RATE</th>
+                            <td><input type="text" class="form-control" name="gbpRate" id="gbpRate" th:value="${exchangeRateDetail.gbpRate}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">EUR Rate</th>
+                            <td><input type="text" class="form-control" name="eurRate" id="eurRate" th:value="${exchangeRateDetail.eurRate}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">HKD Rate</th>
+                            <td><input type="text" class="form-control" name="hkdRate" id="hkdRate" th:value="${exchangeRateDetail.hkdRate}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">CNY Rate</th>
+                            <td><input type="text" class="form-control" name="cnyRate" id="cnyRate" th:value="${exchangeRateDetail.cnyRate}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">CHF Rate</th>
+                            <td><input type="text" class="form-control" name="chfRate" id="chfRate" th:value="${exchangeRateDetail.chfRate}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">QAR Rate</th>
+                            <td><input type="text" class="form-control" name="qarRate" id="qarRate" th:value="${exchangeRateDetail.qarRate}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">AED Rate</th>
+                            <td><input type="text" class="form-control" name="aedRate" id="aedRate" th:value="${exchangeRateDetail.aedRate}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">INR Rate</th>
+                            <td><input type="text" class="form-control" name="inrRate" id="inrRate" th:value="${exchangeRateDetail.inrRate}"></td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+            <!-- 리스트 끝 -->
+            <button type="submit" class="btn btn-default" style="float:left;" id="deleteBtnExchangeRate">
+                Delete
+            </button>
+            <p style="float: right">
+                <button type="submit" class="btn btn-primary" id="updateBtnExchangeRate">Update</button>
+                <button type="button" class="btn btn-default" th:attr="onclick=|closePopup()|">Cancel</button>
+            </p>
+        </div>
+
+        <footer th:include="layout/footer.html"></footer>
+        <div th:include="../static/js/exchangeRatejs.html"></div>
+    </body>
+</html>

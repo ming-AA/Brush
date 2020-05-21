@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Aimme</title>
+        <link rel="icon" href="/img/favicon-black.png" type="image/x-icon">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link href="/css/auction.css" rel="stylesheet">
+
+    </head>
+    <body onbeforeunload="closePopup()" class="lotPopup" style="padding-top: 0px">
+        <div class="col-md-10 col-md-offset-2 main" style="float: left">
+            <h2 class="sub-header" style="font-family: 'EB Garamond', serif">Lot Detail</h2>
+            <!-- 리스트 시작 -->
+            <form name="integrationLotDetailFrm" method="post">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th class="active font-helve">Lot UUID</th>
+                            <td colspan="2">
+                                <a th:href="${lotDetail.lotLink}" th:target="_blank">
+                                    <span th:text="${lotDetail.lotUUID}" ></span>
+                                </a>
+                                <input type="hidden" name="lotUUID" id="lotUUID" th:value="${lotDetail.lotUUID}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Number</th>
+                            <td colspan="2" th:text="${lotDetail.lotNumber}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Title</th>
+                            <td colspan="2">
+                                <input type="text" class="form-control" name="lotTitle" id="lotTitle" th:value="${lotDetail.lotTitle}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Type</th>
+                            <td colspan="2" th:text="${lotDetail.lotType}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Artist</th>
+                            <td colspan="2" th:text="${lotDetail.lotArtist}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Artist Birth</th>
+                            <td colspan="2" th:text="${lotDetail.lotArtistBirth}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Artist Death</th>
+                            <td colspan="2" th:text="${lotDetail.lotArtistDeath}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Estimated Low Price</th>
+                            <td colspan="2">
+                                <input type="text" class="form-control" name="lotEstimatedLowPrice" id="lotEstimatedLowPrice" th:value="${lotDetail.lotEstimatedLowPrice}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Estimated High Price</th>
+                            <td colspan="2">
+                                <input type="text" class="form-control" name="lotEstimatedHighPrice" id="lotEstimatedHighPrice" th:value="${lotDetail.lotEstimatedHighPrice}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Price Realised</th>
+                            <td colspan="2">
+                                <input type="text" class="form-control" name="lotPriceRealised" id="lotPriceRealised" th:value="${lotDetail.lotPriceRealised}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot HammerPrice</th>
+                            <td colspan="2">
+                                <input type="text" class="form-control" name="lotHammerPrice" id="lotHammerPrice" th:value="${lotDetail.lotHammerPrice}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Currency</th>
+                            <td colspan="2" th:text="${lotDetail.lotCurrency}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Provenance</th>
+                            <td colspan="2">
+                                <textarea class="form-control" name="lotProvenance" id="lotProvenance" rows="5" th:text="${lotDetail.lotProvenance}"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Literature</th>
+                            <td colspan="2">
+                                <textarea class="form-control" name="lotLiterature" id="lotLiterature" rows="5" th:text="${lotDetail.lotLiterature}"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Exhibited</th>
+                            <td colspan="2">
+                                <textarea class="form-control" name="lotExhibited" id="lotExhibited" rows="5" th:text="${lotDetail.lotExhibited}"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Description</th>
+                            <td colspan="2">
+                                <textarea class="form-control" name="lotDescription" id="lotDescription" rows="5" th:text="${lotDetail.lotDescription}"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Essay</th>
+                            <td colspan="2">
+                                <textarea class="form-control" name="lotEssay" id="lotEssay" rows="10" th:text="${lotDetail.lotEssay}"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="3" class="active font-helve">Lot Size List</th>
+                        </tr>
+                        <tr th:each="lotSizeList : ${lotDetail.getLotSizeList()}">
+                            <td th:text="${lotSizeListStat.count}"></td>
+                            <td colspan="2" th:text="${lotSizeList}"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="3" class="active font-helve">Lot Image S3 List</th>
+                        </tr>
+                        <tr th:each="lotImageS3List : ${lotDetail.getLotImageS3List()}">
+                            <td th:text="${lotImageS3ListStat.count}"></td>
+                            <td th:each="lotImageS3 : ${lotImageS3List}" th:if="${lotImageS3Stat.count == 3}">
+                                <img th:src="${lotImageS3}" style="width:300px">
+                            </td>
+                            <td style="vertical-align: middle">
+                                <div style="float: left;">
+                                    <a th:each="lotImageS3 : ${lotImageS3List}" th:if="${lotImageS3Stat.count == 3}" th:href="@{${lotImageS3}}" th:target="_blank">
+                                        <button  type="button" class="btn btn-default" style="margin:3px" >
+                                            <span class="glyphicon glyphicon-picture" aria-hidden="true"></span> Detail Size
+                                        </button>
+                                    </a>
+                                    <a th:each="lotImageS3 : ${lotImageS3List}" th:if="${lotImageS3Stat.count == 1}" th:href="@{${lotImageS3}}" th:target="_blank">
+                                        <button  type="button" class="btn btn-default" style="margin:3px">
+                                            <span class="glyphicon glyphicon-picture" aria-hidden="true"></span> Full Size
+                                        </button>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Sale Date</th>
+                            <td colspan="2" th:text="${lotDetail.saleDate}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Sale Location</th>
+                            <td colspan="2" th:text="${lotDetail.saleLocation}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Sale Title</th>
+                            <td colspan="2" th:text="${lotDetail.saleTitle}"></td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+            <!-- 리스트 끝 -->
+            <p style="float: right">
+                <button type="button" class="btn btn-primary" id="setIntegrationLotDetailBtn">Update</button>
+                <button type="button" class="btn btn-default" th:attr="onclick=|closePopup()|">Cancel</button>
+            </p>
+        </div>
+        <footer th:include="layout/footer.html"></footer>
+        <div th:include="../static/js/integrationAuctionjs.html"></div>
+    </body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Aimme - Artist</title>
+        <link rel="icon" href="/img/favicon-black.png" type="image/x-icon">
+    </head>
+    <body>
+    <header th:include="layout/header.html"></header>
+
+    <form name="frm">
+        <input type="hidden" name="currentPageNo" id="currentPageNo" th:value="${pagging.currentPageNo}">
+        <input type="hidden" name="searchValue" id="search" th:value="${searchValue}">
+    </form>
+
+        <div class="container-fluid">
+            <div class="row">
+                <!-- 사이드 메뉴 -->
+                <div th:include="layout/sideMenu.html"></div>
+                <input type="hidden" id="menuName" th:value="artist">
+
+                <!-- 검색 시작 -->
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="padding-bottom: 0px">
+                    <p class="navbar-text" >Artist Search</p>
+                    <form name="searchFrm" class="navbar-form navbar-left" role="search" style="width:inherit">
+                        <div class="form-group" style="width:100%">
+                            <input type="text" class="form-control" id="searchValue" name="searchValue" placeholder="Artist Name" th:value="${searchValue}" style="width:50%; float:left; font-family:'HelveticaNeue', Sans-serif, serif">
+                            <div style="width:20%; float:left; margin-left:1%">
+                                <button type="submit" class="btn btn-default" id="searchBtn" th:attr="onclick=|search('artist')|">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- 검색 끝 -->
+
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                    <h2 class="sub-header" style="font-family: 'EB Garamond', serif" th:text="'Artist (' +${totalRecordCount}+')'">Artist</h2>
+                    <!-- 리스트 시작 -->
+                    <div class="table-responsive">
+                        <button type="button" class="btn btn-default" style="float:right; margin-bottom:10px" th:attr="onclick=|artistCreatePopup()|">
+                            &#127912; Create
+                        </button>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr style="font-family: 'HelveticaNeue', Sans-serif, serif">
+                                <th>No</th>
+                                <th>Artist Name</th>
+                                <th>Eng Artist Name</th>
+                                <th>Lower Eng Artist Name</th>
+                                <th>Born</th>
+                                <th>Death</th>
+                                <th>weight</th>
+                                <th>Use YN</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="artist : ${artistList}">
+                                <td class="artistId" >
+                                    <a><span th:text="${artist.id}"></span></a>
+                                </td>
+                                <td class="artistName" th:text="${artist.artistName}"></td>
+                                <td class="engArtistName" th:text="${artist.engArtistName}"></td>
+                                <td class="lowerEngArtistName" th:text="${artist.lowerEngArtistName}"></td>
+                                <td class="artistBorn" th:text="${artist.born}"></td>
+                                <td class="artistDeath" th:text="${artist.death}"></td>
+                                <td class="artistWeight" th:if="${artist.weight}==100" th:text="높음"></td>
+                                <td class="artistWeight" th:if="${artist.weight}==50" th:text="중간"></td>
+                                <td class="artistWeight" th:if="${artist.weight}==30" th:text="낮음"></td>
+                                <td class="artistWeight" th:if="${artist.weight ==1 || artist.weight==null}" th:text="없음"></td>
+                                <td class="artistUseYN" >
+                                    <a><span th:text="${artist.useYN}"></span></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- 리스트 끝 -->
+
+                    <!-- 페이징 시작 -->
+                    <nav>
+                        <div style="text-align: center">
+                            <ul class="pagination" th:with="start=${pagging.firstPageNoOnPageList}, last=${pagging.lastPageNoOnPageList}">
+                                <li th:if="${pagging.currentPageNo} > 20">
+                                    <a th:attr="onclick=|pagging(1,'artist')|" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li th:if="${pagging.currentPageNo} > 10">
+                                    <a th:attr="onclick=|pagging(${pagging.firstPageNoOnPageList}-1,'artist')|" aria-label="Previous">
+                                        <span aria-hidden="true">&lsaquo;</span>
+                                    </a>
+                                </li>
+                                <li th:class="${page == pagging.currentPageNo} ? 'active'" th:each="page: ${#numbers.sequence(start, last)}">
+                                    <a th:attr="onclick=|pagging(${page},'artist')|" th:text="${page}"><span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                                <li th:if="${pagging.firstPageNoOnPageList}+10 < ${pagging.totalPageCount}">
+                                    <a th:attr="onclick=|pagging(${pagging.lastPageNoOnPageList}+1,'artist')|" aria-label="Previous">
+                                        <span aria-hidden="true">&rsaquo;</span>
+                                    </a>
+                                </li>
+                                <li th:if="${pagging.firstPageNoOnPageList}+20 < ${pagging.totalPageCount}">
+                                    <a th:attr="onclick=|pagging(${pagging.totalPageCount},'artist')|" aria-label="Previous">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <!-- 페이징 끝 -->
+                </div>
+
+            </div>
+        </div>
+        <footer th:include="layout/footer.html"></footer>
+        <div th:include="../static/js/artistjs.html"></div>
+    </body>
+</html>

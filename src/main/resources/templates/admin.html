@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Aimme - Admin</title>
+        <link rel="icon" href="/img/favicon-black.png" type="image/x-icon">
+    </head>
+    <body>
+        <header th:include="layout/header.html"></header>
+
+        <form name="frm">
+            <input type="hidden" name="currentPageNo" id="currentPageNo" th:value="${pagging.currentPageNo}">
+            <input type="hidden" name="searchValue" id="search" th:value="${searchValue}">
+        </form>
+
+        <div class="container-fluid">
+            <div class="row">
+                <!-- 사이드 메뉴 -->
+                <div th:include="layout/sideMenu.html"></div>
+                <input type="hidden" id="menuName" th:value="admin">
+
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                    <h2 class="sub-header" style="font-family: 'EB Garamond', serif">Admin</h2>
+                    <!-- 리스트 시작 -->
+                    <div class="table-responsive">
+                        <button type="button" class="btn btn-default" style="float:right; margin-bottom:10px" th:attr="onclick=|adminCreatePopup()|">
+                            &#128521; Create
+                        </button>
+
+                        <table class="table table-striped">
+                            <thead>
+                            <tr style="font-family: 'HelveticaNeue', Sans-serif, serif">
+                                <th>No</th>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Authority</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="admin : ${adminList}">
+                                <td class="seq" th:text="${admin.seq}"></td>
+                                <td class="adminId" th:text="${admin.adminId}"></td>
+                                <td class="name" th:text="${admin.name}"></td>
+                                <td class="authority" th:text="${admin.authority}"></td>
+                                <td>
+                                    <a th:attr="onclick=|adminDelete(${admin.seq})|" style="margin-left:5.5px">
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- 리스트 끝 -->
+
+                    <!-- 페이징 시작 -->
+                    <nav>
+                        <div style="text-align: center">
+                            <ul class="pagination" th:with="start=${pagging.firstPageNoOnPageList}, last=${pagging.lastPageNoOnPageList}">
+                                <li th:if="${pagging.currentPageNo} > 20">
+                                    <a th:attr="onclick=|pagging(1,'admin')|" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li th:if="${pagging.currentPageNo} > 10">
+                                    <a th:attr="onclick=|pagging(${pagging.firstPageNoOnPageList}-1,'admin')|" aria-label="Previous">
+                                        <span aria-hidden="true">&lsaquo;</span>
+                                    </a>
+                                </li>
+                                <li th:class="${page == pagging.currentPageNo} ? 'active'" th:each="page: ${#numbers.sequence(start, last)}">
+                                    <a th:attr="onclick=|pagging(${page},'admin')|" th:text="${page}"><span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                                <li th:if="${pagging.firstPageNoOnPageList}+10 < ${pagging.totalPageCount}">
+                                    <a th:attr="onclick=|pagging(${pagging.lastPageNoOnPageList}+1,'admin')|" aria-label="Previous">
+                                        <span aria-hidden="true">&rsaquo;</span>
+                                    </a>
+                                </li>
+                                <li th:if="${pagging.firstPageNoOnPageList}+20 < ${pagging.totalPageCount}">
+                                    <a th:attr="onclick=|pagging(${pagging.totalPageCount},'admin')|" aria-label="Previous">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <!-- 페이징 끝 -->
+
+                </div>
+            </div>
+        </div>
+
+        <footer th:include="layout/footer.html"></footer>
+        <div th:include="../static/js/adminjs.html"></div>
+    </body>
+</html>

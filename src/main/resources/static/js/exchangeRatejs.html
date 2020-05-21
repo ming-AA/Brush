@@ -1,0 +1,112 @@
+<script type="text/javascript" th:inline="javascript" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    // VIEW : ExchangeRate
+    // FUNCTION : Exchange Rate Create 생성 팝업 오픈
+    function exchangeRateCreatePopup(){
+        var popUrl = "/exchangeRateCreate";
+        var popupName= "exchangeRateCreate";
+        var width = 800;
+        var height = 600;
+        var leftPosition = (screen.width/2) - width / 2;
+        var topPosition = (screen.height/2) - height / 2;
+        var win = window.open(popUrl, popupName, "left="+leftPosition+",top="+topPosition+",width="+width+",height="+height+", toolbars=no, resizable=no, scrollbars=yes");
+    };
+
+    $(document).ready(function() {
+
+        // VIEW : Exchange Rate Create
+        // FUNCTION : Exchange Rate 생성 기능
+        $("#saveBtnExchangeRate").on("click", function() {
+            if($('#yearMonth').val()==""){
+                alert("Year Month를 입력해주세요.");
+            }
+            else {
+                var data = {
+                    yearMonth: $('#yearMonth').val(),
+                    gbpRate: $('#gbpRate').val(),
+                    eurRate: $('#eurRate').val(),
+                    hkdRate: $('#hkdRate').val(),
+                    cnyRate: $('#cnyRate').val(),
+                    chfRate: $('#chfRate').val(),
+                    qarRate: $('#qarRate').val(),
+                    aedRate: $('#aedRate').val(),
+                    inrRate: $('#inrRate').val()
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/saveExchangeRate',
+                    dataType: 'text',
+                    contentType:'application/json; charset=utf-8',
+                    data: JSON.stringify(data)
+                }).done(function() {
+                    opener.parent.location.reload();
+                    closePopup();
+                }).fail(function (error) {
+                    alert(JSON.stringify(error));
+                });
+            }
+        });
+
+        // VIEW : ExchangeRate
+        // FUNCTION : Exchange Rate Detail 수정 팝업 오픈
+        $("#yearMonth a").on("click", function() {
+            var yearMonth = $(this).find("span").text();
+            var popUrl = "/exchangeRateDetail/"+yearMonth;//팝업창에 출력될 페이지 URL
+            var popupName= "exchangeRateDetail";
+            var width = 800;
+            var height = 600;
+            var leftPosition = (screen.width/2) - width / 2;
+            var topPosition = (screen.height/2) - height / 2;
+            var win = window.open(popUrl, popupName, "left="+leftPosition+",top="+topPosition+",width="+width+",height="+height+", toolbars=no, resizable=no, scrollbars=yes");
+        });
+
+        // VIEW : Exchange Rate Detail
+        // FUNCTION : Exchange Rate 수정 기능
+        $("#updateBtnExchangeRate").on("click", function() {
+            var yearMonth = $('#yearMonth').text();
+            alert($('#gbpRate').val());
+            var data = {
+                gbpRate: $('#gbpRate').val(),
+                eurRate: $('#eurRate').val(),
+                hkdRate: $('#hkdRate').val(),
+                cnyRate: $('#cnyRate').val(),
+                chfRate: $('#chfRate').val(),
+                qarRate: $('#qarRate').val(),
+                aedRate: $('#aedRate').val(),
+                inrRate: $('#inrRate').val()
+            };
+
+            $.ajax({
+                type: 'PUT',
+                url: '/updateExchangeRate/'+yearMonth,
+                dataType: 'text',
+                contentType:'application/json; charset=utf-8',
+                data: JSON.stringify(data)
+            }).done(function() {
+                alert('Exchange Rate Detail이 변경되었습니다.');
+                opener.parent.location.reload();
+                window.location.href = "/exchangeRateDetail/"+yearMonth;
+            }).fail(function (error) {
+                alert(JSON.stringify(error));
+            });
+        });
+
+        // VIEW : Exchange Rate Detail
+        // FUNCTION : Exchange Rate 삭제 기능
+        $("#deleteBtnExchangeRate").on("click", function() {
+            var yearMonth = $('#yearMonth').text();
+            $.ajax({
+                type: 'DELETE',
+                url: '/deleteExchangeRate/'+yearMonth,
+                dataType: 'text',
+                contentType:'application/json; charset=utf-8',
+            }).done(function() {
+                opener.parent.location.reload();
+                closePopup();
+            }).fail(function (error) {
+                alert(JSON.stringify(error));
+            });
+        });
+    });
+</script>

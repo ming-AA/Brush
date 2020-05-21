@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Aimme</title>
+        <link rel="icon" href="/img/favicon-black.png" type="image/x-icon">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link href="/css/auction.css" rel="stylesheet">
+
+    </head>
+    <body onbeforeunload="closePopup()" style="padding-top: 0px">
+
+        <div class="col-md-10 main" style="float: left">
+            <h2 class="sub-header" style="font-family: 'EB Garamond', serif">Artist Detail</h2>
+            <!-- 리스트 시작 -->
+            <form name="artistDetailFrm">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th class="active font-helve">Artist Id</th>
+                            <td id="artistId" name="id" th:text="${artistDetail.id}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Artist Name</th>
+                            <td><input type="text" class="form-control" name="artistName" id="artistName" th:value="${artistDetail.artistName}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Eng Artist Name</th>
+                            <td>
+                                <input type="text" class="form-control" name="engArtistName" id="engArtistName" th:value="${artistDetail.engArtistName}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lower Eng Artist Name</th>
+                            <td id="lowerEngArtistName" name="lowerEngArtistName" th:text="${artistDetail.lowerEngArtistName}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Artist Born</th>
+                            <td><input type="text" class="form-control" name="artistBorn" id="artistBorn" th:value="${artistDetail.born}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Artist Death</th>
+                            <td><input type="text" class="form-control" name="artistDeath" id="artistDeath" th:value="${artistDetail.death}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Artist Weight</th>
+                            <td>
+                                <input type="hidden" id="hiddenArtistWeight" th:value="${artistDetail.weight}">
+                                <select id="artistWeight" name="artistWeight" class="form-control">
+                                    <option value="100" selected>높음</option>
+                                    <option value="50">중간</option>
+                                    <option value="30">낮음</option>
+                                    <option value="1">없음</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Artist Image</th>
+                            <td>
+                                <img th:src="${artistDetail.imageURL}" style="width:300px">
+                                <button class="btn btn-default" >Image Upload</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+            <!-- 리스트 끝 -->
+            <button type="submit" class="btn btn-default" style="float:left;" id="deleteBtnArtist">
+                Delete
+            </button>
+            <p style="float: right">
+                <button type="submit" class="btn btn-primary" id="updateBtnArtist">Update</button>
+                <button type="button" class="btn btn-default" th:attr="onclick=|closePopup()|">Cancel</button>
+            </p>
+        </div>
+
+        <footer th:include="layout/footer.html"></footer>
+        <div th:include="../static/js/artistjs.html"></div>
+        <script th:inline="javascript">
+            $(document).ready(function() {
+                var artistWeight = $('#hiddenArtistWeight').val();
+                if(artistWeight == null || artistWeight==0){
+                   artistWeight = 1;
+                }
+                $("#artistWeight").val(artistWeight).prop("selected", true);
+            });
+        </script>
+    </body>
+</html>

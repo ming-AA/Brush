@@ -1,0 +1,182 @@
+<script type="text/javascript" th:inline="javascript" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    /* VIEW : Integration Auction Lot
+       FUNCTION : Integration Auction Result 화면 이동 */
+    function integrationAuctionResultsList() {
+        document.auctionResultsFrm.action ="/integrationAuctionResults";
+        document.auctionResultsFrm.submit();
+    }
+
+    $(document).ready(function() {
+
+        /* VIEW : Integration Auction Results
+           UNCTION : Auction Title 수정 기능 */
+        $(".updateAuctionTitleBtn").on("click", function() {
+            var page = $('#currentPageNo').val();
+            var tr = $(this).parents("tr");
+            var id = tr.find(".id a span").text();
+            var auctionTitle = tr.find(".auctionTitle div:eq(1) div:eq(0) input").val();
+
+            if(CheckConfirm() == true){
+                var data = {
+                    id: id,
+                    auctionTitle: auctionTitle
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/setIntegrationAuctionTitle',
+                    dataType: 'text',
+                    contentType:'application/json; charset=utf-8',
+                    data: JSON.stringify(data)
+                }).done(function() {
+                    alert('['+auctionTitle+']으로 변경되었습니다.');
+                    location.reload();
+                }).fail(function (error) {
+                    alert(JSON.stringify(error));
+                });
+            }
+        });
+
+        /* VIEW : Integration Auction Lot
+        FUNCTION : Artist 화면 이동 */
+            $(".lotArtistName a").on("click", function() {
+                var artistName = $(this).find("span").text();
+                document.artistFrm.searchValue.value = artistName;
+                document.artistFrm.action ="/artist";
+                document.artistFrm.submit();
+            });
+
+        /* VIEW : Integration Auction Lot
+           FUNCTION : Lot UseYN 수정 기능 */
+        $(".useYN a").on("click", function() {
+            var page = $('#currentPageNo').val();
+            var tr = $(this).parents("tr");
+            var useYN = tr.find(".useYN a span").text();
+
+            useYN = (useYN=="Y") ? "N" : "Y";
+
+            if(CheckConfirm() == true){
+
+                var data = {
+                    lotId: tr.find(".lotId").text(),
+                    lotUseYN: useYN
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/setIntegrationLotUseYN',
+                    dataType: 'text',
+                    contentType:'application/json; charset=utf-8',
+                    data: JSON.stringify(data)
+                }).done(function() {
+                    alert('UseYN=['+useYN+']으로 변경되었습니다.');
+                    location.reload();
+                }).fail(function (error) {
+                    alert(JSON.stringify(error));
+                });
+            }
+
+        });
+
+        /* VIEW : Integration Auction Lot
+           FUNCTION : Lot Detail 팝업 오픈 */
+        $(".lotUUID a").on("click", function() {
+            var tr = $(this).parents("tr");
+            var lotUUID = tr.find(".lotUUID a span").text();
+
+            var popUrl = "/integrationAuctionLotDetail/"+lotUUID;//팝업창에 출력될 페이지 URL
+            var popupName= "integrationAuctionLotDetail";
+            var width = 800;
+            var height = 600;
+            var leftPosition = (screen.width/2) - width / 2;
+            var topPosition = (screen.height/2) - height / 2;
+            var win = window.open(popUrl, popupName, "left="+leftPosition+",top="+topPosition+",width="+width+",height="+height+", toolbars=no, resizable=no, scrollbars=yes");
+
+        });
+
+        /* VIEW : Integration Auction Lot Detail
+           FUNCTION : Lot Detail 수정 기능 */
+        $("#setIntegrationLotDetailBtn").on("click", function() {
+            //var lotDetail = $("form[name=integrationLotDetailFrm]").serialize();
+            var lotUUID = $('#lotUUID').val();
+            var data = {
+                lotUUID: $('#lotUUID').val(),
+                lotTitle: $('#lotTitle').val(),
+                lotEstimatedLowPrice: $('#lotEstimatedLowPrice').val(),
+                lotEstimatedHighPrice: $('#lotEstimatedHighPrice').val(),
+                lotPriceRealised: $('#lotPriceRealised').val(),
+                lotHammerPrice: $('#lotHammerPrice').val(),
+                lotProvenance: $('#lotProvenance').val(),
+                lotLiterature: $('#lotLiterature').val(),
+                lotExhibited: $('#lotExhibited').val(),
+                lotDescription: $('#lotDescription').val(),
+                lotEssay: $('#lotEssay').val()
+            };
+
+            $.ajax({
+                type: 'PUT',
+                url: '/setIntegrationLotDetail',
+                dataType: 'text',
+                contentType:'application/json; charset=utf-8',
+                data: JSON.stringify(data)
+            }).done(function() {
+                alert('Lot Detail이 변경되었습니다.');
+                window.location.href = "/integrationAuctionLotDetail/"+lotUUID;
+            }).fail(function (error) {
+                alert(JSON.stringify(error));
+            });
+        });
+
+        /* VIEW : Integration Auction Lot
+           FUNCTION : Lot Image Choose 팝업 조회 기능 */
+        $(".imgChoose a").on("click", function() {
+            var tr = $(this).parents("tr");
+            var lotUUID = tr.find(".lotUUID a span").text();
+
+            var popUrl = "/integrationAuctionLotImgChoose/"+lotUUID;//팝업창에 출력될 페이지 URL
+            var popupName= "integrationAuctionLotImgChoose";
+            var width = 800;
+            var height = 600;
+            var leftPosition = (screen.width/2) - width / 2;
+            var topPosition = (screen.height/2) - height / 2;
+            var win = window.open(popUrl, popupName, "left="+leftPosition+",top="+topPosition+",width="+width+",height="+height+", toolbars=no, resizable=no, scrollbars=yes");
+        });
+
+        /* VIEW : Integration Auction Lot Img Choose
+          FUNCTION : Lot 대표 이미지 수정 기능 */
+        $("#setLotImgChooseBtn").on("click", function() {
+
+            var chooseTr = $(":input:radio[name=id]:checked").parents("tr"); // 선택된 대표 이미지가 속한 tr
+            var chooseRepImgId = $(":input:radio[name=id]:checked").val(); // 선택된 대표 이미지 순서 번호
+            var chooseImgUrl = chooseTr.find("td img").attr("src"); // 선택된 대표 이미지 Url
+            alert(chooseRepImgId);
+            if(chooseRepImgId == "" || chooseRepImgId == null){
+                alert("대표 사진을 선택해주세요.")
+            }
+            else {
+                var data = {
+                    lotUUID: $('#lotUUID').val(),
+                    chooseRepImgId: chooseRepImgId,
+                    chooseImgUrl: chooseImgUrl
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/setIntegrationLotRepImg',
+                    dataType: 'text',
+                    contentType:'application/json; charset=utf-8',
+                    data: JSON.stringify(data)
+                }).done(function() {
+                    alert('Lot 대표 사진이 변경되었습니다.');
+                    opener.parent.location.reload();
+                    closePopup();
+                }).fail(function (error) {
+                    alert(JSON.stringify(error));
+                });
+            }
+        });
+
+    });
+</script>
+

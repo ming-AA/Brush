@@ -1,0 +1,121 @@
+<script type="text/javascript" th:inline="javascript" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    // VIEW : Artist
+    // FUNCTION : Artist Create 생성 팝업 오픈
+    function artistCreatePopup(){
+        var popUrl = "/artistCreate";
+        var popupName= "artistCreate";
+        var width = 800;
+        var height = 600;
+        var leftPosition = (screen.width/2) - width / 2;
+        var topPosition = (screen.height/2) - height / 2;
+        var win = window.open(popUrl, popupName, "left="+leftPosition+",top="+topPosition+",width="+width+",height="+height+", toolbars=no, resizable=no, scrollbars=yes");
+    };
+
+    // VIEW : Artist Create
+    // FUNCTION : Artist 생성 기능
+    function artistCreate() {
+        document.artistCreateFrm.action ="/saveArtist";
+        document.artistCreateFrm.submit();
+        opener.parent.location.reload();
+        closePopup();
+
+    }
+
+    $(document).ready(function() {
+
+        // VIEW : Artist
+        // FUNCTION : UseYN 수정 기능
+        $(".artistUseYN").on("click", function() {
+            var page = $('#currentPageNo').val();
+            var tr = $(this).parents("tr");
+            var artistId = tr.find(".artistId a span").text();
+            var artistUseYN = tr.find(".artistUseYN a span").text();
+
+            artistUseYN = (artistUseYN=="Y") ? "N" : "Y";
+
+            if(CheckConfirm() == true){
+
+                var data = {
+                    id: artistId,
+                    useYN: artistUseYN
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/updateArtistUseYN',
+                    dataType: 'text',
+                    contentType:'application/json; charset=utf-8',
+                    data: JSON.stringify(data)
+                }).done(function() {
+                    alert('UseYN=['+artistUseYN+']으로 변경되었습니다.');
+                    location.reload();
+                    pagging(page, "artist");
+                }).fail(function (error) {
+                    alert(JSON.stringify(error));
+                });
+            }
+        });
+
+        // VIEW : Artist
+        // FUNCTION : Artist Detail 수정 팝업 오픈
+        $(".artistId a").on("click", function() {
+            var artistId = $(this).find("span").text();
+
+            var popUrl = "/artistDetail/"+artistId;//팝업창에 출력될 페이지 URL
+            var popupName= "artistDetail";
+            var width = 800;
+            var height = 600;
+            var leftPosition = (screen.width/2) - width / 2;
+            var topPosition = (screen.height/2) - height / 2;
+            var win = window.open(popUrl, popupName, "left="+leftPosition+",top="+topPosition+",width="+width+",height="+height+", toolbars=no, resizable=no, scrollbars=yes");
+        });
+
+        // VIEW : Artist Detail
+        // FUNCTION : Artist 수정 기능
+        $("#updateBtnArtist").on("click", function() {
+            var artistId = $('#artistId').text();
+            var data = {
+                artistName: $('#artistName').val(),
+                engArtistName: $('#engArtistName').val(),
+                born: $('#artistBorn').val(),
+                death: $('#artistDeath').val(),
+                weight: $('#artistWeight option:selected').val()
+            };
+
+            $.ajax({
+                type: 'PUT',
+                url: '/updateArtist/'+artistId,
+                dataType: 'text',
+                contentType:'application/json; charset=utf-8',
+                data: JSON.stringify(data)
+            }).done(function() {
+                alert('Artist Detail이 변경되었습니다.');
+                opener.parent.location.reload();
+                window.location.href = "/artistDetail/"+artistId;
+            }).fail(function (error) {
+                alert(JSON.stringify(error));
+            });
+        });
+
+        // VIEW : Artist Detail
+        // FUNCTION : Artist 삭제 기능
+        $("#deleteBtnArtist").on("click", function() {
+            var artistId = $('#artistId').text();
+
+            $.ajax({
+                type: 'DELETE',
+                url: '/deleteArtist/'+artistId,
+                dataType: 'text',
+                contentType:'application/json; charset=utf-8',
+            }).done(function() {
+                opener.parent.location.reload();
+                closePopup();
+            }).fail(function (error) {
+                alert(JSON.stringify(error));
+            });
+        });
+
+    });
+
+</script>

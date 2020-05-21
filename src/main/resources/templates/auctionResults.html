@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aimme - Auction Results</title>
+    <link rel="icon" href="/img/favicon-black.png" type="image/x-icon">
+</head>
+<body>
+    <header th:include="layout/header.html"></header>
+
+    <form name="frm" method="post">
+        <input type="hidden" name="currentPageNo" id="currentPageNo" th:value="${pagging.currentPageNo}">
+        <input type="hidden" name="auctionId" id="auctionId" th:value="1">
+        <input type="hidden" name="auctionName" id="auctionName" th:value="1">
+        <input type="hidden" name="auctionTitle" id="auctionTitle" th:value="1">
+        <input type="hidden" name="searchValue" id="search" th:value="${searchValue}">
+    </form>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 사이드 메뉴 -->
+            <div th:include="layout/sideMenu.html"></div>
+            <input type="hidden" id="menuName" th:value="auctionResults">
+
+            <!-- 검색 시작 -->
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="padding-bottom: 0px">
+                <p class="navbar-text" >Title Search</p>
+                <form name="searchFrm" class="navbar-form navbar-left" role="search" style="width:inherit">
+                    <div class="form-group" style="width:100%">
+                        <input type="text" class="form-control" id="searchValue" name="searchValue" placeholder="Auction Title" th:value="${searchValue}" style="width:50%; float:left; font-family:'HelveticaNeue', Sans-serif, serif">
+                        <div style="width:20%; float:left; margin-left:1%">
+                            <button type="submit" class="btn btn-default" id="searchBtn" th:attr="onclick=|search('auctionResults')|">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- 검색 끝 -->
+
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <h2 class="sub-header" style="font-family: 'EB Garamond', serif" th:text="'Auction Results (' +${totalRecordCount}+')'"></h2>
+                <!-- 리스트 시작 -->
+                <div class="table-responsive">
+                    <table class="table table-striped" id="auctionResultTable">
+                        <thead>
+                            <tr style="font-family: 'HelveticaNeue', Sans-serif, serif">
+                                <th>No</th>
+                                <th>Auction</th>
+                                <th>Sale Year</th>
+                                <th>Sale Period</th>
+                                <th>Sale Location</th>
+                                <th>Online</th>
+                                <th>Title</th>
+                                <th>Crawl</th>
+                                <th>Trans</th>
+                                <th>Integration</th>
+                                <th>Crawl Date Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="auctionResult : ${auctionResultsList}">
+                                <td class="auctionId">
+                                    <a th:href="@{'/auctionLot/'+${auctionResult.auctionName}+'/'+${auctionResult.id}+'/'+${auctionResult.title}}">
+                                        <span th:text="${auctionResult.id}"></span>
+                                    </a>
+                                </td>
+                                <td class="auctionName">
+                                    <span th:text="${auctionResult.auctionName}"></span>
+                                </td>
+                                <td th:text="${auctionResult.saleYear}"></td>
+                                <td th:text="${auctionResult.salePeriod}"></td>
+                                <td th:text="${auctionResult.saleLocation}"></td>
+                                <td th:text="${auctionResult.online}"></td>
+                                <td class="auctionTitle">
+                                    <div th:id="auctionTitleView+${auctionResultStat.count}" style="display:block">
+                                        <a th:href="${auctionResult.landingUrl}" th:target="_blank">
+                                            <span th:text="${auctionResult.title}"></span>
+                                        </a>
+                                        <a th:attr="onclick=|auctionTitleUpdateView(${auctionResultStat.count})|" style="margin-left:5.5px">
+                                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                        </a>
+                                    </div>
+                                    <div th:id="auctionTitleUpdateView+${auctionResultStat.count}" style="width:100%; display:none">
+                                        <div style="width:90%; float: left">
+                                            <input type="text" class="form-control" th:value="${auctionResult.title}">
+                                        </div>
+                                        <div style="width:5%; margin-left:8px; float:left">
+                                            <a class="updateTitleBtn">
+                                                <span class="glyphicon glyphicon-ok" aria-hidden="true" style="padding-top:8px"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="crawlStatus">
+                                    <a>
+                                        <span th:text="${auctionResult.crawlStatus}"></span>
+                                    </a>
+                                </td>
+                                <td class="transStatus">
+                                    <a>
+                                        <span th:text="${auctionResult.transStatus}"></span>
+                                    </a>
+                                </td>
+                                <td th:text="${auctionResult.integStatus}"></td>
+                                <td th:text="${auctionResult.crawlDateTime}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- 리스트 끝 -->
+
+                <!-- 페이징 시작 -->
+                <nav>
+                    <div style="text-align: center">
+                        <ul class="pagination" th:with="start=${pagging.firstPageNoOnPageList}, last=${pagging.lastPageNoOnPageList}">
+                            <li th:if="${pagging.currentPageNo} > 20">
+                                <a th:attr="onclick=|pagging(1,'auctionResults')|" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li th:if="${pagging.currentPageNo} > 10">
+                                <a th:attr="onclick=|pagging(${pagging.firstPageNoOnPageList}-1,'auctionResults')|" aria-label="Previous">
+                                    <span aria-hidden="true">&lsaquo;</span>
+                                </a>
+                            </li>
+                            <li th:class="${page == pagging.currentPageNo} ? 'active'" th:each="page: ${#numbers.sequence(start, last)}">
+                                <a th:attr="onclick=|pagging(${page},'auctionResults')|" th:text="${page}"><span class="sr-only">(current)</span>
+                                </a>
+                            </li>
+                            <li th:if="${pagging.firstPageNoOnPageList}+10 < ${pagging.totalPageCount}">
+                                <a th:attr="onclick=|pagging(${pagging.lastPageNoOnPageList}+1,'auctionResults')|" aria-label="Previous">
+                                    <span aria-hidden="true">&rsaquo;</span>
+                                </a>
+                            </li>
+                            <li th:if="${pagging.firstPageNoOnPageList}+20 < ${pagging.totalPageCount}">
+                                <a th:attr="onclick=|pagging(${pagging.totalPageCount},'auctionResults')|" aria-label="Previous">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <!-- 페이징 끝 -->
+            </div>
+        </div>
+    </div>
+
+    <footer th:include="layout/footer.html"></footer>
+    <div th:include="../static/js/auctionjs.html"></div>
+</body>
+</html>

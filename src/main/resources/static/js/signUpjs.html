@@ -1,0 +1,65 @@
+<script type="text/javascript" th:inline="javascript" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    $(document).ready(function() {
+        // VIEW : User
+        // FUNCTION : User Detail 수정 팝업 오픈
+        $(".userId a").on("click", function() {
+            var userId = $(this).find("span").text();
+
+            var popUrl = "/userDetail/"+userId;//팝업창에 출력될 페이지 URL
+            var popupName= "userDetail";
+            var width = 800;
+            var height = 600;
+            var leftPosition = (screen.width/2) - width / 2;
+            var topPosition = (screen.height/2) - height / 2;
+            var win = window.open(popUrl, popupName, "left="+leftPosition+",top="+topPosition+",width="+width+",height="+height+", toolbars=no, resizable=no, scrollbars=yes");
+        });
+
+        // VIEW : User Detail
+        // FUNCTION : User 수정 기능
+        $("#updateBtnUser").on("click", function() {
+            var userId = $('#userId').text();
+            var data = {
+                userName: $('#userName').val(),
+                userEmail: $('#userEmail').val()
+            };
+
+            $.ajax({
+                type: 'PUT',
+                url: '/updateUser/'+userId,
+                dataType: 'text',
+                contentType:'application/json; charset=utf-8',
+                data: JSON.stringify(data)
+            }).done(function() {
+                alert('User Detail이 변경되었습니다.');
+                opener.parent.location.reload();
+                window.location.href = "/userDetail/"+userId;
+            }).fail(function (error) {
+                alert(JSON.stringify(error));
+            });
+        });
+
+
+        // VIEW : User Detail
+        // FUNCTION : User 삭제 기능
+        $("#deleteBtnUser").on("click", function() {
+            var userId = $('#userId').text();
+
+            $.ajax({
+                type: 'DELETE',
+                url: '/deleteUser/'+userId,
+                dataType: 'text',
+                contentType:'application/json; charset=utf-8',
+            }).done(function() {
+                opener.parent.location.reload();
+                closePopup();
+            }).fail(function (error) {
+                alert(JSON.stringify(error));
+            });
+        });
+
+
+
+    });
+
+</script>

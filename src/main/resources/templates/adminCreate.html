@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Aimme</title>
+        <link rel="icon" href="/img/favicon-black.png" type="image/x-icon">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link href="/css/auction.css" rel="stylesheet">
+
+    </head>
+    <body onbeforeunload="closePopup()" style="padding-top: 0px">
+    <div class="col-md-10 main" style="float: left">
+        <h2 class="sub-header" style="font-family: 'EB Garamond', serif">Admin</h2>
+        <!-- 리스트 시작 -->
+        <form th:action="@{/saveAdmin}" th:method="post">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="active font-helve">Admin Id</th>
+                        <td><input type="text" class="form-control" name="adminId"></td>
+                    </tr>
+                    <tr>
+                        <th class="active font-helve">Admin Password</th>
+                        <td>
+                            <input type="text" class="form-control" name="adminPassword">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="active font-helve">Name</th>
+                        <td>
+                            <input type="text" class="form-control" name="name">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="active font-helve">Authority</th>
+                        <td>
+                            <select id="authority" name="authority" class="form-control">
+                                <option value="admin" >Admin</option>
+                                <option value="member" selected>Member</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- 리스트 끝 -->
+
+            <p style="float: right">
+                <button type="submit" class="btn btn-primary" th:attr="onclick=|closePopup()|">Create</button>
+                <button type="button" class="btn btn-default" th:attr="onclick=|closePopup()|">Cancel</button>
+            </p>
+        </form>
+    </div>
+
+    <footer th:include="layout/footer.html"></footer>
+    </body>
+</html>

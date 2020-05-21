@@ -1,0 +1,235 @@
+<script type="text/javascript" th:inline="javascript" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    /* VIEW : (Chris & Sotheby) Auction Lot
+       FUNCTION : Auction Result 화면 이동 */
+    function auctionResultsList() {
+        document.auctionResultsFrm.action ="/auctionResults";
+        document.auctionResultsFrm.submit();
+    }
+
+    $(document).ready(function(){
+
+        /* VIEW : (Chris & Sotheby) Auction Results
+           FUNCTION : Crawl 상태 수정 기능 */
+        $(".crawlStatus a").on("click", function() {
+            var _this = $(this);
+            var tr = _this.parents("tr");
+            var page = $('#currentPageNo').val();
+            var crawlStatus = _this.find("span").text();
+
+            if(crawlStatus == 'P' || crawlStatus == 'Y' ){ // P or R 수집준비, Y 수집, N 수집전
+                if(CheckConfirm() == true){
+                    var id = tr.find(".auctionId a span").text();
+                    var name = tr.find(".auctionName span").text();
+                    var title = tr.find(".auctionTitle span").text();
+
+                    var data = {
+                        id: id,
+                        auctionName: name,
+                        crawlStatus: 'N',
+                        transStatus: 'N'
+                    };
+
+                    $.ajax({
+                        type: 'PUT',
+                        url: '/crawlStatus',
+                        dataType: 'text',
+                        contentType:'application/json; charset=utf-8',
+                        data: JSON.stringify(data)
+                    }).done(function() {
+                        alert('['+title+']이 Crawl=N, Trans=N로 변경되었습니다.');
+                        window.location.href = '/auctionResults';
+                        pagging(page, "auctionResults");
+                    }).fail(function (error) {
+                        alert(JSON.stringify(error));
+                    });
+                }
+            }
+        });
+
+    /* VIEW : (Chris & Sotheby) Auction Results
+       FUNCTION : Trans 상태 수정 기능 */
+    $(".transStatus a").on("click", function() {
+        var _this = $(this);
+        var tr = _this.parents("tr");
+        var page = $('#currentPageNo').val();
+
+        var transStatus = _this.find("span").text();
+        var crawlStatus = tr.find(".crawlStatus a span").text();
+
+
+        if(crawlStatus == 'Y' && transStatus == 'N' ) { // P or R 수집준비, Y 수집, N 수집전
+            if(CheckConfirm() == true){
+                var id = tr.find(".auctionId a span").text();
+                var name = tr.find(".auctionName span").text();
+                var title = tr.find(".auctionTitle span").text();
+
+                var data = {
+                    id: id,
+                    auctionName: name,
+                    transStatus: 'Y'
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/transStatus',
+                    dataType: 'text',
+                    contentType:'application/json; charset=utf-8',
+                    data: JSON.stringify(data)
+                }).done(function() {
+                    alert('['+title+']이 Trans=Y로 변경되었습니다.');
+                    window.location.href = '/auctionResults';
+                    pagging(page, "auctionResults");
+                }).fail(function (error) {
+                    alert(JSON.stringify(error));
+                });
+            }
+        }
+    });
+
+    /* VIEW : (Chris & Sotheby) Auction Results
+       FUNCTION : Auction Title 수정 기능 */
+    $(".updateTitleBtn").on("click", function() {
+        var page = $('#currentPageNo').val();
+        var tr = $(this).parents("tr");
+        var id = tr.find(".auctionId a span").text();
+        var auctionName = tr.find(".auctionName span").text();
+        var auctionTitle = tr.find(".auctionTitle div:eq(1) div:eq(0) input").val();
+
+        if(CheckConfirm() == true){
+            var data = {
+                id: id,
+                auctionName: auctionName,
+                title: auctionTitle
+            };
+
+            $.ajax({
+                type: 'PUT',
+                url: '/setAuctionTitle',
+                dataType: 'text',
+                contentType:'application/json; charset=utf-8',
+                data: JSON.stringify(data)
+            }).done(function() {
+                alert('['+auctionTitle+']으로 변경되었습니다.');
+                window.location.href = '/auctionResults';
+                pagging(page, "auctionResults");
+
+            }).fail(function (error) {
+                alert(JSON.stringify(error));
+            });
+        }
+    });
+
+    /* VIEW : Auction Lot
+       FUNCTION : Artist 화면 이동 */
+    $(".lotArtist a").on("click", function() {
+        var artistName = $(this).find("span").text();
+        document.artistFrm.searchValue.value = artistName;
+        document.artistFrm.action ="/artist";
+        document.artistFrm.submit();
+    });
+
+    /* VIEW : (Chris & Sotheby) Auction Lot
+       FUNCTION : Integ 상태 수정 기능 */
+    $(".lotIntegStatus a").on("click", function() {
+        const page = $('#currentPageNo').val();
+        const tr = $(this).parents("tr");
+        const lotId = tr.find(".lotId").text();
+        let integStatus = tr.find(".lotIntegStatus a span").text();
+        if(integStatus !='E'){
+            if(CheckConfirm() == true ){
+
+                if(integStatus == 'Y' || integStatus == 'X' ) { // Y, X, N, E
+                    integStatus = 'N';
+                } else if(integStatus =='N'){
+                    integStatus = 'E';
+                }
+                const auctionId = $('#auctionId').val();
+                const auctionName = $('#auctionName').val();
+                const auctionTitle = $('#auctionTitle').val();
+
+                var data = {
+                    lotId: lotId,
+                    integStatus: integStatus,
+                    auctionName: auctionName
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/setLotIntegStatus',
+                    dataType: 'text',
+                    contentType:'application/json; charset=utf-8',
+                    data: JSON.stringify(data)
+                }).done(function() {
+                    alert('IntegStatus=['+integStatus+']로 변경되었습니다.');
+                    window.location.href = '/auctionLot/'+auctionName+'/'+auctionId+'/'+auctionTitle;
+                    pagging(page, "auctionLot");
+                }).fail(function (error) {
+                    alert(JSON.stringify(error));
+                });
+            }
+        }
+    });
+
+    /* VIEW : (Chris & Sotheby) Auction Lot
+       FUNCTION : Lot Detail 팝업 조회 기능 */
+    $(".lotUUID a").on("click", function() {
+        var _this = $(this);
+        var tr = _this.parents("tr");
+        var auctionName = $('#auctionName').val();
+        var lotUUID = tr.find(".lotUUID").text();
+        var crawlStatus = tr.find(".lotCrawlStatus").text();
+
+        if(crawlStatus == 'Y') { // P or R 수집준비, Y 수집, N 수집전
+
+            var popUrl = "/auctionLotDetail/"+auctionName+"/"+lotUUID;//팝업창에 출력될 페이지 URL
+            var popupName= "auctionLotDetail";
+            var width = 800;
+            var height = 600;
+            var leftPosition = (screen.width/2) - width / 2;
+            var topPosition = (screen.height/2) - height / 2;
+            var win = window.open(popUrl, popupName, "left="+leftPosition+",top="+topPosition+",width="+width+",height="+height+", toolbars=no, resizable=no, scrollbars=yes");
+
+        }
+    });
+
+    /* VIEW : (Chris & Sotheby) Auction Lot Detail
+       FUNCTION : Lot Detail 수정 기능 */
+    $("#setLotDetailBtn").on("click", function() {
+        //var lotDetail = $("form[name=integrationLotDetailFrm]").serialize();
+        var lotUUID = $('#lotUUID').val();
+        var auctionName = $('#auctionName').val();
+        var data = {
+            auctionName: $('#auctionName').val(),
+            lotUUID: $('#lotUUID').val(),
+            lotTitle: $('#lotTitle').val(),
+            lotEstimatedLowPrice: $('#lotEstimatedLowPrice').val(),
+            lotEstimatedHighPrice: $('#lotEstimatedHighPrice').val(),
+            lotPriceRealised: $('#lotPriceRealised').val(),
+            lotHammerPrice: $('#lotHammerPrice').val(),
+            lotProvenance: $('#lotProvenance').val(),
+            lotLiterature: $('#lotLiterature').val(),
+            lotExhibited: $('#lotExhibited').val(),
+            lotDescription: $('#lotDescription').val(),
+            lotEssay: $('#lotEssay').val()
+        };
+
+        $.ajax({
+            type: 'PUT',
+            url: '/setLotDetail',
+            dataType: 'text',
+            contentType:'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function() {
+            alert('Lot Detail이 변경되었습니다.');
+            window.location.href = "/auctionLotDetail/"+auctionName+"/"+lotUUID;
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    });
+
+
+
+
+});
+</script>

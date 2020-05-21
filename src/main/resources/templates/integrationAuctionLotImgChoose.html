@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aimme</title>
+    <link rel="icon" href="/img/favicon-black.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link href="/css/auction.css" rel="stylesheet">
+
+</head>
+<body onbeforeunload="closePopup()" class="lotPopup" style="padding-top: 0px">
+<div class="col-md-10 col-md-offset-2 main" style="float: left">
+    <h2 class="sub-header" style="font-family: 'EB Garamond', serif">Representative Image Settings</h2>
+    <!-- 리스트 시작 -->
+    <form method="post">
+        <div class="table-responsive">
+            <input type="hidden" id="lotUUID" th:value="${lotUUID}">
+            <table class="table table-bordered" id="lotImgTable">
+                <tr>
+                    <th>
+                        <span>Lot UUID</span>
+                    </th>
+                    <td>
+                        <span th:text="${lotUUID}"></span>
+                    </td>
+                </tr>
+                <tr th:each="lotImage : ${lotImageList}">
+                    <th>
+                        <span th:text="${lotImage.lotImageId}"></span>
+                    </th>
+                    <td>
+                        <img th:src="${lotImage.lotImageUrl}" style="width:300px">
+                    </td>
+                    <td th:if="${lotImage.lotImageId != 1}" style="vertical-align: middle">
+                        <input type="radio" name="id" th:value="${lotImage.lotImageId}">
+                    </td>
+                    <td th:if="${lotImage.lotImageId == 1}" style="vertical-align: middle">
+                        <input type="radio" name="id" th:value="${lotImage.lotImageId}" disabled="true">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+    <!-- 리스트 끝 -->
+    <p style="float: right">
+        <button type="button" class="btn btn-primary" id="setLotImgChooseBtn">Update</button>
+        <button type="button" class="btn btn-default" th:attr="onclick=|closePopup()|">Cancel</button>
+    </p>
+</div>
+<footer th:include="layout/footer.html"></footer>
+<div th:include="../static/js/integrationAuctionjs.html"></div>
+</body>
+</html>

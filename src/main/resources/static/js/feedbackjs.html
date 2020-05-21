@@ -1,0 +1,63 @@
+<script type="text/javascript" th:inline="javascript" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    $(document).ready(function() {
+        // VIEW : Feedback
+        // FUNCTION : Feedback Detail 수정 팝업 오픈
+        $(".feedbackId a").on("click", function() {
+            var feedbackId = $(this).find("span").text();
+
+            var popUrl = "/feedbackDetail/"+feedbackId;//팝업창에 출력될 페이지 URL
+            var popupName= "feedbackDetail";
+            var width = 800;
+            var height = 600;
+            var leftPosition = (screen.width/2) - width / 2;
+            var topPosition = (screen.height/2) - height / 2;
+            var win = window.open(popUrl, popupName, "left="+leftPosition+",top="+topPosition+",width="+width+",height="+height+", toolbars=no, resizable=no, scrollbars=yes");
+        });
+
+        // VIEW : Feedback Detail
+        // FUNCTION : Feedback 수정 기능
+        $("#updateBtnFeedback").on("click", function() {
+            var feedbackId = $('#feedbackId').text();
+            var data = {
+                name: $('#feedbackName').val(),
+                content: $('#feedbackContent').val(),
+                email: $('#feedbackEmail').val()
+            };
+
+            $.ajax({
+                type: 'PUT',
+                url: '/updateFeedback/'+feedbackId,
+                dataType: 'text',
+                contentType:'application/json; charset=utf-8',
+                data: JSON.stringify(data)
+            }).done(function() {
+                alert('Feedback Detail이 변경되었습니다.');
+                opener.parent.location.reload();
+                window.location.href = "/feedbackDetail/"+feedbackId;
+            }).fail(function (error) {
+                alert(JSON.stringify(error));
+            });
+        });
+
+        // VIEW : Feedback Detail
+        // FUNCTION : Feedback 삭제 기능
+        $("#deleteBtnFeedback").on("click", function() {
+            var feedbackId = $('#feedbackId').text();
+
+            $.ajax({
+                type: 'DELETE',
+                url: '/deleteFeedback/'+feedbackId,
+                dataType: 'text',
+                contentType:'application/json; charset=utf-8',
+            }).done(function() {
+                opener.parent.location.reload();
+                closePopup();
+            }).fail(function (error) {
+                alert(JSON.stringify(error));
+            });
+        });
+
+    });
+
+</script>

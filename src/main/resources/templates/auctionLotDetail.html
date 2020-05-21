@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Aimme</title>
+        <link rel="icon" href="/img/favicon-black.png" type="image/x-icon">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link href="/css/auction.css" rel="stylesheet">
+
+    </head>
+    <body onbeforeunload="closePopup()" class="lotPopup" style="padding-top: 0px">
+
+        <form>
+            <input type="hidden" name="auctionName" id="auctionName" th:value="${auctionName}">
+            <input type="hidden" name="lotUUID" id="lotUUID" th:value="${lotDetail.lotUUID}">
+        </form>
+
+        <div class="col-md-10 main" style="float: left">
+            <h2 class="sub-header" style="font-family: 'EB Garamond', serif">Lot Detail</h2>
+            <!-- 리스트 시작 -->
+            <form name="lotDetailFrm" method="post">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th class="active font-helve">Lot UUID</th>
+                            <td>
+                                <a th:href="${lotDetail.lotLink}" th:target="_blank">
+                                    <span th:text="${lotDetail.lotUUID}"></span>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Number</th>
+                            <td th:text="${lotDetail.lotNumber}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Title</th>
+                            <td>
+                                <input type="text" class="form-control" name="lotTitle" id="lotTitle" th:value="${lotDetail.lotTitle}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Type</th>
+                            <td th:text="${lotDetail.lotType}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Artist</th>
+                            <td th:text="${lotDetail.lotArtist}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Artist Birth</th>
+                            <td th:text="${lotDetail.lotArtistBirth}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Artist Death</th>
+                            <td th:text="${lotDetail.lotArtistDeath}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Estimated Low Price</th>
+                            <td>
+                                <input type="text" class="form-control" name="lotEstimatedLowPrice" id="lotEstimatedLowPrice" th:value="${lotDetail.lotEstimatedLowPrice}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Estimated High Price</th>
+                            <td>
+                                <input type="text" class="form-control" name="lotEstimatedHighPrice" id="lotEstimatedHighPrice" th:value="${lotDetail.lotEstimatedHighPrice}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Price Realised</th>
+                            <td>
+                                <input type="text" class="form-control" name="lotPriceRealised" id="lotPriceRealised" th:value="${lotDetail.lotPriceRealised}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot HammerPrice</th>
+                            <td>
+                                <input type="text" class="form-control" name="lotHammerPrice" id="lotHammerPrice" th:value="${lotDetail.lotHammerPrice}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Currency</th>
+                            <td th:text="${lotDetail.lotCurrency}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Provenance</th>
+                            <td>
+                                <textarea class="form-control" name="lotProvenance" id="lotProvenance" rows="5" th:text="${lotDetail.lotProvenance}"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Literature</th>
+                            <td>
+                                <textarea class="form-control" name="lotLiterature" id="lotLiterature" rows="5" th:text="${lotDetail.lotLiterature}"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Exhibited</th>
+                            <td>
+                                <textarea class="form-control" name="lotExhibited" id="lotExhibited" rows="5" th:text="${lotDetail.lotExhibited}"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Description</th>
+                            <td>
+                                <textarea class="form-control" name="lotDescription" id="lotDescription" rows="5" th:text="${lotDetail.lotDescription}"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Lot Essay</th>
+                            <td>
+                                <textarea class="form-control" name="lotEssay" id="lotEssay" rows="10" th:text="${lotDetail.lotEssay}"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="active font-helve">Lot Size List</th>
+                        </tr>
+                        <tr th:each="lotSizeList : ${lotDetail.getLotSizeList()}">
+                            <td th:text="${lotSizeListStat.count}"></td>
+                            <td th:text="${lotSizeList}"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="active font-helve">Lot Image List</th>
+                        </tr>
+                        <tr th:each="lotImageList : ${lotDetail.getLotImageList()}">
+                            <td th:text="${lotImageListStat.count}"></td>
+                            <td><img th:src="${lotImageList}" style="width:300px"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Sale Date</th>
+                            <td th:text="${lotDetail.saleDate}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Sale Location</th>
+                            <td th:text="${lotDetail.saleLocation}"></td>
+                        </tr>
+                        <tr>
+                            <th class="active font-helve">Sale Title</th>
+                            <td th:text="${lotDetail.saleTitle}"></td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+            <!-- 리스트 끝 -->
+            <p style="float: right">
+                <button type="button" class="btn btn-primary" id="setLotDetailBtn">Update</button>
+                <button type="button" class="btn btn-default" th:attr="onclick=|closePopup()|">Cancel</button>
+            </p>
+        </div>
+        <footer th:include="layout/footer.html"></footer>
+        <div th:include="../static/js/auctionjs.html"></div>
+    </body>
+</html>

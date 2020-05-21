@@ -1,0 +1,15 @@
+<div class="col-sm-3 col-md-2 sidebar">
+    <ul class="nav nav-sidebar" id="sideMenu">
+        <li id="auctionResults"><a th:href="@{'/auctionResults'}">Auction Results</a></li>
+        <li id="auctionLot"><a>Auction Lot</a></li>
+        <li id="integrationAuctionResults"><a th:href="@{'/integrationAuctionResults'}">Integration Auction Results</a></li>
+        <li id="integrationAuctionLot"><a>Integration Auction Lot</a></li>
+        <li id="exchangeRate"><a th:href="@{'/exchangeRate'}">Exchange Rate Manage</a></li>
+        <li id="artist"><a th:href="@{'/artist'}">Artist</a></li>
+        <li id="signUp"><a th:href="@{'/user'}">Tester Register</a></li>
+        <li id="feedback"><a th:href="@{'/feedback'}">Feedback</a></li>
+        <li id="admin" th:if="${session.authority} == 'admin'">
+            <a th:href="@{'/admin'}">Admin</a>
+        </li>
+    </ul>
+</div>
